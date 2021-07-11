@@ -175,31 +175,5 @@ RSpec.describe "プロトタイプのアクセス範囲の制限", type: :system
     # 他人のプロトタイプの編集ページにアクセスするとトップページへ飛ばされること
     visit edit_prototype_path(@prototype)
     expect(current_path).to eq root_path
-    # # 他人のプロトタイプの編集を実行しても失敗してトップページへ飛ばされること
-    # patch prototype_path(@prototype), params: {
-    #   session_form: {
-    #     prototype_title: prototype2.title,
-    #     prototype_catch_copy: prototype2.catch_copy,
-    #     prototype_concept: prototype2.concept
-    #   }
-    # }
-    # expect(current_path).to eq root_path
-    # # 他人のプロトタイプの削除を実行しても失敗してトップページへ飛ばされること
-    # expect{
-    #   delete prototype_path(@prototype)
-    # }.not_to change{Prototype.count}
-    # expect(current_path).to eq root_path
   end
-
-  # it 'ログイン状態なら自分のプロダクトの「編集」「削除」ができる' do
-  #   # 削除できる
-  #   sign_in(@prototype.user)
-  #   visit prototype_path(@prototype)
-  #   binding.pry
-  #   expect{
-  #     delete prototype_path(@prototype)
-  #     follow_redirect!
-  #   }.to change{Prototype.count}.by(-1)
-  #   # response.Location
-  # end
 end

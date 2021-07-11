@@ -1,5 +1,5 @@
 class PrototypesController < ApplicationController
-  # ログインしていないユーザーがプロトタイプの投稿・編集・削除ページへのアクセス・実行しようとするとトップへ飛ばす
+  # ログインしていないユーザーがプロトタイプの投稿・編集・削除ページへのアクセス・実行しようとするとログインページへ飛ばす
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   # 他の投稿者のプロトタイプの編集・削除ページへのアクセス・実行しようとするとトップへ飛ばす
   before_action :poster!, only: [:edit, :update, :destroy]

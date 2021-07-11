@@ -114,3 +114,55 @@ RSpec.describe 'ログイン', type: :system do
     end
   end
 end
+
+RSpec.describe 'ユーザー詳細ページ機能', type: :system do
+  before do
+    @prototype = FactoryBot.create(:prototype)
+    @my_prototype = FactoryBot.create(:prototype)
+  end
+  # ログイン・ログアウトの状態に関わらず、以下ができること
+  #   各ページのユーザー名をクリックすると、ユーザーの詳細ページへ遷移すること
+  #   ユーザーの詳細ページには、そのユーザーの詳細情報と、そのユーザーが投稿したプロトタイプが表示されていること
+  it 'ログアウト状態でもユーザー詳細ページへ遷移し、ユーサーの詳細情報とプロトタイプを見れること' do
+    # ログアウト状態でもトップページからユーザー詳細ページへ遷移できる
+    visit root_path
+    click_link @prototype.user.name
+    expect(current_path).to eq user_path(@prototype.user)
+    # ユーザーの詳細ページには、そのユーザーの詳細情報が表示されていること
+    expect(page).to have_content(@prototype.user.name)
+    expect(page).to have_content(@prototype.user.profile)
+    expect(page).to have_content(@prototype.user.occupation)
+    expect(page).to have_content(@prototype.user.position)
+    # ユーザーの詳細ページには、そのユーザーが投稿したプロトタイプが表示されていること
+    expect(page).to have_content(@prototype.title)
+    expect(page).to have_content(@prototype.catch_copy)
+  end
+
+  it 'ログイン状態でユーザー詳細ページへ遷移し、ユーサーの詳細情報とプロトタイプを見れること' do
+    sign_in(@my_prototype.user)
+    # ログイン状態でもトップページから他人(プロトタイプ投稿者)のユーザー詳細ページへ遷移できる
+    visit root_path
+    click_link @prototype.user.name
+    expect(current_path).to eq user_path(@prototype.user)
+    # ユーザーの詳細ページには、そのユーザーの詳細情報が表示されていること
+    expect(page).to have_content(@prototype.user.name)
+    expect(page).to have_content(@prototype.user.profile)
+    expect(page).to have_content(@prototype.user.occupation)
+    expect(page).to have_content(@prototype.user.position)
+    # ユーザーの詳細ページには、そのユーザーが投稿したプロトタイプが表示されていること
+    expect(page).to have_content(@prototype.title)
+    expect(page).to have_content(@prototype.catch_copy)
+    # 自分のユーザー詳細ページへ遷移できる
+    visit root_path
+    find('.greeting').find_link(@my_prototype.user.name).click # リンクが複数あるとエラーになるので範囲しぼって探す
+    expect(current_path).to eq user_path(@my_prototype.user)
+    # ユーザーの詳細ページには、そのユーザーの詳細情報が表示されていること
+    expect(page).to have_content(@my_prototype.user.name)
+    expect(page).to have_content(@my_prototype.user.profile)
+    expect(page).to have_content(@my_prototype.user.occupation)
+    expect(page).to have_content(@my_prototype.user.position)
+    # ユーザーの詳細ページには、そのユーザーが投稿したプロトタイプが表示されていること
+    expect(page).to have_content(@my_prototype.title)
+    expect(page).to have_content(@my_prototype.catch_copy)
+  end
+end
